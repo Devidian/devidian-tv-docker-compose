@@ -12,44 +12,22 @@ services:
     networks:
       - dtvnet
     links:
-      - devidian-tv-auth:dtv-auth
+      - devidian-tv-api:dtv-auth
     environment:
       HTTP_PORT: ${INGEST_HTTP_PORT}
       RTMP_PORT: ${INGEST_RTMP_PORT}
-      STREAM_AUTH_HOST: ${INGEST_STREAM_AUTH_HOST}
+      STREAM_PUBLISH_NOTIFY_URL: ${INGEST_PUBLISH_NOTIFY_URL}
       RTMP_TRANSCODE_IP: ${INGEST_RTMP_TRANSCODE_IP}
       RTMP_HLS_IP: ${INGEST_RTMP_HLS_IP}
     volumes:
       - /appdata/nginx/certs:/opt/certs
 
-  # Auth will be integrated into API in the future
-  devidian-tv-auth:
-    container_name: devidian-tv_auth
-    image: devidian/devidian-tv-auth
-    restart: unless-stopped
-    depends_on:
-      - devidian-tv-mongo
-    networks:
-      - dtvnet
-    links:
-      - devidian-tv-mongo:dtv-db
-    environment: 
-      PORT: ${AUTH_PORT}
-      TRANSCODER_IP: ${AUTH_TRANSCODER_IP}
-      TRANSCODER_TYPE: ${AUTH_TRANSCODER_TYPE}
-      HLS_TYPE: ${AUTH_HLS_TYPE}
-      SECRET: ${AUTH_SECRET}
-      MONGODB_APPNAME: ${AUTH_MONGODB_APPNAME}
-      MONGODB_URI: ${AUTH_MONGODB_URI}
-      
   devidian-tv-app:
     container_name: devidian-tv_app
     image: devidian/devidian-tv-app
     restart: unless-stopped
     ports:
       - 8090:80
-    # networks:
-    #   - dtvnet
 
   devidian-tv-api:
     container_name: devidian-tv_api
@@ -80,6 +58,8 @@ services:
       COOKIE_ORIGINS: "${API_COOKIE_ORIGINS}"
       PORT: ${API_PORT}
       HOST: ${API_HOST}
+      TRANSCODER_IP: ${AUTH_TRANSCODER_IP}
+      TRANSCODER_TYPE: ${AUTH_TRANSCODER_TYPE}
       APP_LOG_LEVEL: ${API_APP_LOG_LEVEL}
       APP_LOG_COLOR: ${API_APP_LOG_COLOR}
       APP_LOG_DB: ${API_APP_LOG_DB}
