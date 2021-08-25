@@ -3,7 +3,7 @@ version: '3.8'
 services:
   devidian-tv-ingest:
     container_name: devidian-tv_ingest
-    image: devidian/devidian-tv-transcoder
+    image: devidian/devidian-tv-transcoder:latest
     restart: unless-stopped
     ports:
       - 1935:1935
@@ -24,14 +24,14 @@ services:
 
   devidian-tv-app:
     container_name: devidian-tv_app
-    image: devidian/devidian-tv-app
+    image: devidian/devidian-tv-app:latest
     restart: unless-stopped
     ports:
       - 8090:80
 
   devidian-tv-api:
     container_name: devidian-tv_api
-    image: devidian/devidian-tv-api
+    image: devidian/devidian-tv-api:latest
     restart: unless-stopped
     depends_on:
       - devidian-tv-mongo
@@ -55,7 +55,6 @@ services:
       OID_STEAM_KEY: ${API_OID_STEAM_KEY}
       OID_STEAM_RETURN: ${API_OID_STEAM_RETURN}
       COOKIE_DOMAIN: ${API_COOKIE_DOMAIN}
-      COOKIE_ORIGINS: "${API_COOKIE_ORIGINS}"
       PORT: ${API_PORT}
       HOST: ${API_HOST}
       TRANSCODER_IP: ${AUTH_TRANSCODER_IP}
